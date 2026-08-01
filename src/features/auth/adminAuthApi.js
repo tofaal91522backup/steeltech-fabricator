@@ -1,5 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 import { adminLoggedIn } from "./adminAuthSlice";
+import safeStorage from "../../utils/safeStorage";
 
 export const adminAuthApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,9 +15,9 @@ export const adminAuthApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
          
-          localStorage.removeItem("steeltech-fabricator-admin");
+          safeStorage.removeItem("steeltech-fabricator-admin");
 
-          localStorage.setItem(
+          safeStorage.setItem(
             "steeltech-fabricator-admin",
             JSON.stringify({
               token: result?.data?.access,

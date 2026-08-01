@@ -3,6 +3,7 @@ import logo from "../../assets/images/steeltech_logo.svg";
 import { Link } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 
+// Replace with the actual APK download URL before release
 const APK_DOWNLOAD_URL = "https://transfer.ongshak.com/static/steeltech/mar.apk";
 
 const HomePage = () => {

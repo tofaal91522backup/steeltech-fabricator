@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import safeStorage from "../../utils/safeStorage";
 
 const initialState = {
   token: undefined,
@@ -17,8 +18,7 @@ const adminAuthSlice = createSlice({
     adminLoggedOut: (state) => {
       state.token = undefined;
       state.user = undefined;
-      localStorage.removeItem("steeltech-fabricator-admin");
-      // localStorage.removeItem("transend-auth-admininde");
+      safeStorage.removeItem("steeltech-fabricator-admin");
     },
   },
 });
