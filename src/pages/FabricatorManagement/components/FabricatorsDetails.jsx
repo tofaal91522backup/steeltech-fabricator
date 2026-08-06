@@ -10,6 +10,7 @@ import { useModalContext } from "../../../context/ModalContext";
 
 const FabricatorsDetails = ({ isOpen, onClose, fabricator }) => {
   const [activeTab, setActiveTab] = useState("personal");
+  const [previewImage, setPreviewImage] = useState(null);
 
   const { data: fabricatorDetails } = useGetFabricatorByIdQuery({
     id: fabricator?.id,
@@ -111,102 +112,46 @@ const FabricatorsDetails = ({ isOpen, onClose, fabricator }) => {
     </div>
   );
 
+  const renderDocumentCard = (title, url) => (
+    <div className="border rounded-lg p-4" key={title}>
+      <h4 className="font-medium text-gray-900 mb-2">{title}</h4>
+      <button
+        type="button"
+        onClick={() => setPreviewImage({ url, title })}
+        className="block w-full rounded overflow-hidden bg-gray-50 cursor-zoom-in group"
+      >
+        <img
+          src={url}
+          alt={title}
+          className="w-full h-40 object-cover group-hover:opacity-90 transition-opacity"
+        />
+      </button>
+    </div>
+  );
+
   const renderDocuments = () => (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {fabricatorDetails?.trade_license_img_url ? (
-          <div className="border rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 mb-2">Trade License</h4>
-            <div className="bg-gray-50 rounded p-4 text-center">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400 mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <p className="text-sm text-gray-600">Trade License</p>
-              <a
-                href={fabricatorDetails?.trade_license_img_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <button className="mt-2 text-blue-600 hover:text-blue-800 text-sm">
-                  View Document
-                </button>
-              </a>
-            </div>
-          </div>
-        ) : null}
+        {fabricatorDetails?.trade_license_img_url
+          ? renderDocumentCard(
+              "Trade License",
+              fabricatorDetails.trade_license_img_url
+            )
+          : null}
 
-        {fabricatorDetails?.visiting_card_img_url ? (
-          <div className="border rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 mb-2">
-              Business Certificate
-            </h4>
-            <div className="bg-gray-50 rounded p-4 text-center">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400 mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <p className="text-sm text-gray-600">Visiting Card</p>
-              <a
-                href={fabricatorDetails?.visiting_card_img_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <button className="mt-2 text-blue-600 hover:text-blue-800 text-sm">
-                  View Document
-                </button>
-              </a>
-            </div>
-          </div>
-        ) : null}
-        {fabricatorDetails?.profile_img_url ? (
-          <div className="border rounded-lg p-4">
-            <h4 className="font-medium text-gray-900 mb-2">Profile Image</h4>
-            <div className="bg-gray-50 rounded p-4 text-center">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400 mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <p className="text-sm text-gray-600">Profile Image</p>
-              <a
-                href={fabricatorDetails?.profile_img_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <button className="mt-2 text-blue-600 hover:text-blue-800 text-sm">
-                  View Document
-                </button>
-              </a>
-            </div>
-          </div>
-        ) : null}
+        {fabricatorDetails?.visiting_card_img_url
+          ? renderDocumentCard(
+              "Business Certificate",
+              fabricatorDetails.visiting_card_img_url
+            )
+          : null}
+
+        {fabricatorDetails?.profile_img_url
+          ? renderDocumentCard(
+              "Profile Image",
+              fabricatorDetails.profile_img_url
+            )
+          : null}
       </div>
       {/* <div className="border rounded-lg p-4">
         <h4 className="font-medium text-gray-900 mb-2">Additional Documents</h4>
@@ -330,6 +275,7 @@ const FabricatorsDetails = ({ isOpen, onClose, fabricator }) => {
   };
 
   return (
+    <>
     <Modal isOpen={isOpen} onClose={onClose} title="Fabricator Details">
       {/* Tabs */}
       <div className="border-b mb-6">
@@ -383,6 +329,47 @@ const FabricatorsDetails = ({ isOpen, onClose, fabricator }) => {
         </button>
       </div>
     </Modal>
+
+    {previewImage ? (
+      <div
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
+        onClick={() => setPreviewImage(null)}
+      >
+        <div
+          className="relative max-w-4xl w-full"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => setPreviewImage(null)}
+            className="absolute -top-10 right-0 text-white hover:text-gray-300 cursor-pointer"
+          >
+            <svg
+              className="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <img
+            src={previewImage.url}
+            alt={previewImage.title}
+            className="max-w-full max-h-[85vh] mx-auto rounded-lg shadow-2xl object-contain"
+          />
+          <p className="text-center text-white mt-2 text-sm">
+            {previewImage.title}
+          </p>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 };
 

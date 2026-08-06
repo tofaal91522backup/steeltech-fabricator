@@ -49,6 +49,13 @@ export const fabricatorApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["fabricator"],
     }),
+    deleteFabricator: builder.mutation({
+      query: ({ id }) => ({
+        url: `/administrator/fabricator/?id=${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["fabricator"],
+    }),
 
     // deleteMarketingRep: builder.mutation({
     //   query: ({ id }) => ({
@@ -69,4 +76,5 @@ export const {
   useGetAllMRQuery,
   useAssignMrMutation,
   useChangeStatusMutation,
+  useDeleteFabricatorMutation,
 } = fabricatorApi;

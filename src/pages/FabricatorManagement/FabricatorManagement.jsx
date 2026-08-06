@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import FabricatorsDetails from "./components/FabricatorsDetails";
 import {
   useChangeStatusMutation,
+  useDeleteFabricatorMutation,
   useGetAllFabricatorsQuery,
 } from "../../features/fabricartorApi/fabricartorApi";
 import FabricatorsAssign from "./components/FabricatorsAssign";
@@ -81,6 +82,20 @@ const FabricatorManagement = () => {
     });
   };
 
+  const [
+    deleteFabricator,
+    { data: deleteData, isSuccess: isDeleteSuccess, isError: isDeleteError },
+  ] = useDeleteFabricatorMutation();
+
+  const handleDelete = (id) => {
+    const ok = window.confirm(
+      "Delete this fabricator? This permanently deletes the fabricator and cascade-deletes all of their submitted reports. This action cannot be undone."
+    );
+    if (!ok) return;
+
+    deleteFabricator({ id });
+  };
+
 
   const tabs = [
     { id: "all", label: "All", count: 156 },
@@ -114,6 +129,15 @@ const FabricatorManagement = () => {
       });
     }
   }, [isSuccess, isError]);
+
+  useEffect(() => {
+    if (isDeleteSuccess || isDeleteError) {
+      modalDispatch({
+        type: "success",
+        payload: deleteData?.message,
+      });
+    }
+  }, [isDeleteSuccess, isDeleteError]);
 
   const statusStyles = {
     pending: "bg-yellow-100 text-yellow-800",
@@ -272,6 +296,12 @@ const FabricatorManagement = () => {
                         Reject
                       </button>
                     )}
+                    <button
+                      className="bg-gray-800 text-white px-3 py-1 rounded text-xs cursor-pointer hover:bg-gray-900"
+                      onClick={() => handleDelete(fabricator?.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
