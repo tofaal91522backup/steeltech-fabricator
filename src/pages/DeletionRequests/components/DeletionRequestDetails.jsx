@@ -1,4 +1,5 @@
 import Modal from "../../../components/Modal";
+import ImageAttachments from "../../../components/ImageAttachments";
 
 const statusStyles = {
   pending: "bg-blue-100 text-blue-800",
@@ -55,6 +56,14 @@ const DeletionRequestDetails = ({
             <p>Fabricator: {snapshot.fabricator_name}</p>
             <p className="col-span-2">Distributor: {snapshot.distributor_name}</p>
           </div>
+          {snapshot.attachements_urls?.length > 0 && (
+            <div className="mt-3">
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+                Attachments
+              </p>
+              <ImageAttachments urls={snapshot.attachements_urls} />
+            </div>
+          )}
         </div>
 
         <div className="border-t border-gray-100 pt-4">

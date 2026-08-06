@@ -1,4 +1,5 @@
 import Modal from "../../../components/Modal";
+import ImageAttachments from "../../../components/ImageAttachments";
 
 const IssueViewModal = ({ isOpen, onClose, issue }) => {
   if (!issue) return null;
@@ -25,19 +26,7 @@ const IssueViewModal = ({ isOpen, onClose, issue }) => {
           {issue.attachments_urls?.length > 0 && (
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Attachments</p>
-              <div className="flex flex-wrap gap-2">
-                {issue.attachments_urls.map((url) => (
-                  <a
-                    key={url}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs text-blue-600 underline"
-                  >
-                    {url.split("/").pop()}
-                  </a>
-                ))}
-              </div>
+              <ImageAttachments urls={issue.attachments_urls} />
             </div>
           )}
           <div>
