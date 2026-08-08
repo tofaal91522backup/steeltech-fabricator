@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Remove-Item \"e:\\\\CSE\\\\ONGSHAK\\\\projects\\\\Discover-Ai-frontend\\\\src\\\\features\\\\dashboard\\\\admin\\\\_pages\\\\supplier-management\\\\inventory-management\\\\InventoryManagementSection.column.tsx\")",
+      "Bash(npx tsc *)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(curl -s -o /tmp/resp.html -w \"HTTP_STATUS:%{http_code}\\\\n\" \"http://localhost:3000/dashboard/admin/manage-customers/create-package\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/resp2.html -w \"HTTP_STATUS:%{http_code}\\\\n\" \"http://localhost:3000/dashboard/admin/manage-customers/create-package\")",
+      "Bash(curl -s -o /dev/null -w \"HTTP_STATUS:%{http_code}\\\\n\" \"http://localhost:3000/dashboard/admin/manage-customers/create-package\")"
+    ]
+  }
+}

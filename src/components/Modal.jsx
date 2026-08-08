@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 
-const Modal = ({ isOpen, onClose, children, title }) => {
+const Modal = ({ isOpen, onClose, children, title, maxWidthClass = "max-w-2xl" }) => {
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === "Escape") {
@@ -32,7 +32,7 @@ const Modal = ({ isOpen, onClose, children, title }) => {
         ></div>
 
         {/* Modal panel */}
-        <div className="inline-block relative z-50 w-full max-w-2xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+        <div className={`inline-block relative z-50 w-full ${maxWidthClass} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg`}>
           {/* Header */}
           {title && (
             <div className="flex items-center justify-between mb-6">

@@ -1,0 +1,4 @@
+{
+    "email": "master.admin@steeltech.com",
+    "password": "m@ster#3"
+}

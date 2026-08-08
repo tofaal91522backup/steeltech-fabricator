@@ -35,6 +35,7 @@ const Issues = () => {
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [replyStatus, setReplyStatus] = useState("open");
 
   const { dispatch: modalDispatch } = useModalContext();
   const queryClient = useQueryClient();
@@ -72,13 +73,13 @@ const Issues = () => {
       handleCloseModals();
       modalDispatch({
         type: "success",
-        payload: "Reply sent and issue marked as closed.",
+        payload: "Issue updated successfully.",
       });
     },
     onError: (err) => {
       modalDispatch({
         type: "open",
-        payload: err?.response?.data?.message || "Failed to send reply.",
+        payload: err?.response?.data?.message || "Failed to update issue.",
       });
     },
   });
@@ -91,6 +92,7 @@ const Issues = () => {
   const handleOpenReply = (issue) => {
     setSelectedIssue(issue);
     setReplyText("");
+    setReplyStatus(issue.status);
     setIsReplyModalOpen(true);
   };
 
@@ -104,15 +106,20 @@ const Issues = () => {
     setIsViewModalOpen(false);
     setSelectedIssue(null);
     setReplyText("");
+    setReplyStatus("open");
   };
 
+  const hasReplyChanges =
+    !!replyText.trim() || replyStatus !== selectedIssue?.status;
+
   const handleSendReply = () => {
-    if (!replyText.trim() || !selectedIssue) return;
-    replyMutation.mutate({
-      id: selectedIssue.id,
-      status: "closed",
-      reply: replyText.trim(),
-    });
+    if (!selectedIssue || !hasReplyChanges) return;
+
+    const payload = { id: selectedIssue.id };
+    if (replyStatus !== selectedIssue.status) payload.status = replyStatus;
+    if (replyText.trim()) payload.reply = replyText.trim();
+
+    replyMutation.mutate(payload);
   };
 
   return (
@@ -234,14 +241,12 @@ const Issues = () => {
                       >
                         View
                       </button>
-                      {issue.status !== "closed" && (
-                        <button
-                          onClick={() => handleOpenReply(issue)}
-                          className="bg-orange-500 text-white px-3 py-1 rounded text-xs cursor-pointer hover:bg-orange-600"
-                        >
-                          Reply
-                        </button>
-                      )}
+                      <button
+                        onClick={() => handleOpenReply(issue)}
+                        className="bg-orange-500 text-white px-3 py-1 rounded text-xs cursor-pointer hover:bg-orange-600"
+                      >
+                        Reply
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -275,8 +280,11 @@ const Issues = () => {
             issue={selectedIssue}
             replyText={replyText}
             onReplyChange={setReplyText}
+            status={replyStatus}
+            onStatusChange={setReplyStatus}
             onSend={handleSendReply}
             isSending={replyMutation.isPending}
+            hasChanges={hasReplyChanges}
           />
           <IssueViewModal
             isOpen={isViewModalOpen}

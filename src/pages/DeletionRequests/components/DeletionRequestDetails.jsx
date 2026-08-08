@@ -49,12 +49,27 @@ const DeletionRequestDetails = ({
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
             Report Snapshot
           </p>
-          <div className="bg-gray-50 p-3 rounded-lg grid grid-cols-2 gap-2 text-sm text-gray-900">
-            <p>Invoice: {snapshot.invoice_number}</p>
-            <p>Amount: BDT {snapshot.amount}</p>
-            <p>Sales date: {snapshot.sales_date}</p>
-            <p>Fabricator: {snapshot.fabricator_name}</p>
-            <p className="col-span-2">Distributor: {snapshot.distributor_name}</p>
+          <div className="bg-gray-50 p-3 rounded-lg grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <p className="text-xs text-gray-500 mb-0.5">Invoice</p>
+              <p className="text-gray-900 font-medium">{snapshot.invoice_number}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 mb-0.5">Amount</p>
+              <p className="text-gray-900 font-medium">BDT {snapshot.amount}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 mb-0.5">Sales date</p>
+              <p className="text-gray-900 font-medium">{snapshot.sales_date}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 mb-0.5">Fabricator</p>
+              <p className="text-gray-900 font-medium">{snapshot.fabricator_name}</p>
+            </div>
+            <div className="col-span-2">
+              <p className="text-xs text-gray-500 mb-0.5">Distributor</p>
+              <p className="text-gray-900 font-medium">{snapshot.distributor_name}</p>
+            </div>
           </div>
           {snapshot.attachements_urls?.length > 0 && (
             <div className="mt-3">
@@ -66,13 +81,19 @@ const DeletionRequestDetails = ({
           )}
         </div>
 
-        <div className="border-t border-gray-100 pt-4">
-          <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
-            {deleteReasonLabels[request.delete_reason] || request.delete_reason}
-          </p>
-          <p className="text-sm text-gray-900 bg-gray-50 p-3 rounded-lg leading-relaxed">
-            {request.remarks || "—"}
-          </p>
+        <div className="border-t border-gray-100 pt-4 grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Reason</p>
+            <p className="text-sm font-medium text-gray-900">
+              {deleteReasonLabels[request.delete_reason] || request.delete_reason}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Comment</p>
+            <p className="text-sm text-gray-900 bg-gray-50 p-2 rounded-lg leading-relaxed">
+              {request.remarks || "—"}
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">

@@ -1,10 +1,10 @@
-import { useState } from "react";
 import Modal from "../../../components/Modal";
 import { useGetDistributorByIdQuery } from "../../../features/distributorApi/distributorApi";
 import {
   useGetMrReportByIdQuery,
   useGetReportByIdQuery,
 } from "../../../features/reportsApi/reportsApi";
+import { LuExternalLink, LuMapPin } from "react-icons/lu";
 
 const ReportDetails = ({ reportActiveTab, isOpen, onClose, record }) => {
   const { data: distributor } = useGetDistributorByIdQuery({
@@ -18,19 +18,12 @@ const ReportDetails = ({ reportActiveTab, isOpen, onClose, record }) => {
     id: record?.id,
   });
 
-
-  const [activeTab, setActiveTab] = useState("fabricator");
-  const tabs = [
-    { id: "fabricator", label: "Fabricator Info" },
-    { id: "distributor", label: "Distributor Info" },
-    { id: "mar", label: "Marketing Representative" },
-    { id: "attachment", label: "Attachment" },
-  ];
+  const hasLocation = !!(reportDetails?.latitude && reportDetails?.longitude);
 
   if (!record) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} maxWidthClass="max-w-5xl">
       <div className="space-y-6">
         {/* Header with Avatar and Name */}
         <div className="flex items-center space-x-4 pb-4 border-b border-b-gray-200">
@@ -86,128 +79,132 @@ const ReportDetails = ({ reportActiveTab, isOpen, onClose, record }) => {
           </div>
         ) : null}
 
-        <div className="border-b border-b-gray-200 mb-6">
-          <nav className="flex space-x-8">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm cursor-pointer ${
-                  activeTab === tab.id
-                    ? "border-orange-500 text-orange-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
+        {/* Fabricator / Distributor / Marketing Representative Info */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="border rounded-lg p-4">
+            <h3 className="font-bold text-gray-900 mb-2">Fabricator Info</h3>
+            <div className="space-y-1">
+              <p className="text-gray-900">
+                <span className="font-bold">Name: </span>{" "}
+                {reportDetails?.fabricator_name}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">Phone: </span>{" "}
+                {reportDetails?.fabricator_phone_number}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">District: </span>{" "}
+                {reportDetails?.fabricator_district},{" "}
+                {reportDetails?.fabricator_sub_district}
+              </p>
+            </div>
+          </div>
+
+          <div className="border rounded-lg p-4">
+            <h3 className="font-bold text-gray-900 mb-2">Distributor Info</h3>
+            <div className="space-y-1">
+              <p className="text-gray-900">
+                <span className="font-bold">Name: </span> {distributor?.name}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">Email: </span> {distributor?.email}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">Phone Number: </span>{" "}
+                {distributor?.phone_number}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">District: </span>{" "}
+                {distributor?.sub_district}, {distributor?.district}
+              </p>
+            </div>
+          </div>
+
+          <div className="border rounded-lg p-4">
+            <h3 className="font-bold text-gray-900 mb-2">
+              Marketing Representative
+            </h3>
+            <div className="space-y-1">
+              <p className="text-gray-900">
+                <span className="font-bold">Name: </span>{" "}
+                {reportDetails?.marketing_rep_name}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">Phone: </span>{" "}
+                {reportActiveTab === "marketing-rep-and-fabricator"
+                  ? reportDetailsMr?.marketing_rep_phone
+                  : reportDetails?.marketing_rep_phone_number}
+              </p>
+              <p className="text-gray-900">
+                <span className="font-bold">District: </span>{" "}
+                {reportDetails?.marketing_rep_district},{" "}
+                {reportDetails?.marketing_rep_sub_district}
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left Column */}
-          <div className="space-y-4">
-            {activeTab == "distributor" ? (
-              <div>
-                <p className="text-gray-900">
-                  <span className="font-bold">Name: </span> {distributor?.name}
-                </p>
-                <p className="text-gray-900">
-                  <span className="font-bold">Email: </span>{" "}
-                  {distributor?.email}
-                </p>
-                <p className="text-gray-900">
-                  <span className="font-bold">Phone Number: </span>{" "}
-                  {distributor?.phone_number}
-                </p>
-
-                <p className="text-gray-900">
-                  <span className="font-bold">District: </span>{" "}
-                  {distributor?.sub_district}, {distributor?.district}
-                </p>
-              </div>
-            ) : null}
-
-            {activeTab == "mar" ? (
-              <div>
-                <p className="text-gray-900">
-                  <span className="font-bold">Name: </span>{" "}
-                  {reportDetails?.marketing_rep_name}
-                </p>
-                <p className="text-gray-900">
-                  <span className="font-bold">Phone: </span>{" "}
-                  {reportActiveTab === "marketing-rep-and-fabricator"
-                    ? reportDetailsMr?.marketing_rep_phone
-                    : reportDetails?.marketing_rep_phone_number}
-                </p>
-
-                <p className="text-gray-900">
-                  <span className="font-bold">District: </span>{" "}
-                  {reportDetails?.marketing_rep_district},{" "}
-                  {reportDetails?.marketing_rep_sub_district}
-                </p>
-              </div>
-            ) : null}
-            {activeTab == "fabricator" ? (
-              <div>
-                <p className="text-gray-900">
-                  <span className="font-bold">Name: </span>{" "}
-                  {reportDetails?.fabricator_name}
-                </p>
-                <p className="text-gray-900">
-                  <span className="font-bold">Phone: </span>{" "}
-                  {reportDetails?.fabricator_phone_number}
-                </p>
-
-                <p className="text-gray-900">
-                  <span className="font-bold">District: </span>{" "}
-                  {reportDetails?.fabricator_district},{" "}
-                  {reportDetails?.fabricator_sub_district}
-                </p>
-              </div>
-            ) : null}
-
-            {activeTab == "attachment" ? (
-              <div>
-                {/* <h2 className="text-2xl pb-2">Attachment</h2> */}
-                {reportDetails?.attachements_urls?.length ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {reportDetails?.attachements_urls?.map((url) => (
-                      <div className="border rounded-lg p-4 w-full">
-                        <div className="bg-gray-50 rounded p-4 text-center">
-                          <svg
-                            className="mx-auto h-12 w-12 text-gray-400 mb-2"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                          </svg>
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <button className="mt-2 text-blue-600 hover:text-blue-800 text-sm cursor-pointer">
-                              View Document
-                            </button>
-                          </a>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p>No Attachment found!</p>
-                )}
-              </div>
+        {/* Location Map */}
+        <div className="border rounded-lg p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-bold text-gray-900 flex items-center gap-1">
+              <LuMapPin className="w-4 h-4" /> Location
+            </h3>
+            {hasLocation ? (
+              <a
+                href={`https://www.google.com/maps?q=${reportDetails.latitude},${reportDetails.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 text-sm flex items-center gap-1"
+              >
+                Open in Google Maps <LuExternalLink className="w-4 h-4" />
+              </a>
             ) : null}
           </div>
+          {hasLocation ? (
+            <iframe
+              title="Report location"
+              className="w-full h-64 rounded border-0"
+              src={`https://maps.google.com/maps?q=${reportDetails.latitude},${reportDetails.longitude}&z=15&output=embed`}
+            />
+          ) : (
+            <p className="text-gray-500 text-sm">Location not available.</p>
+          )}
+        </div>
+
+        {/* Attachments */}
+        <div className="border rounded-lg p-4">
+          <h3 className="font-bold text-gray-900 mb-2">Attachment</h3>
+          {reportDetails?.attachements_urls?.length ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {reportDetails?.attachements_urls?.map((url) => (
+                <div className="border rounded-lg p-4 w-full" key={url}>
+                  <div className="bg-gray-50 rounded p-4 text-center">
+                    <svg
+                      className="mx-auto h-12 w-12 text-gray-400 mb-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    <a href={url} target="_blank" rel="noopener noreferrer">
+                      <button className="mt-2 text-blue-600 hover:text-blue-800 text-sm cursor-pointer">
+                        View Document
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-sm">No Attachment found!</p>
+          )}
         </div>
 
         {/* Additional Information */}
